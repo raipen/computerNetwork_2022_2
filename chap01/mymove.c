@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
         else
             totalSize += size;
 
-    fprintf(stdout,"move from %s to %s (bytes: %d) finished.", argv[1], argv[2], totalSize);
+    printf("move from %s to %s (bytes: %d) finished.\n", argv[1], argv[2], totalSize);
     
     close(fin);
     close(fout);
