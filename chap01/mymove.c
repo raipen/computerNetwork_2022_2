@@ -32,7 +32,8 @@ int main(int argc, char *argv[]){
     
     close(fin);
     close(fout);
-    remove(argv[1]);
+    if(remove(argv[1])==-1)
+        error_handling("remove error");
     return 0;
 }
 
