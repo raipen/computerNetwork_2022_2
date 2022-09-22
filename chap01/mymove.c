@@ -28,6 +28,9 @@ int main(int argc, char *argv[]){
         else
             totalSize += size;
 
+    if (size == -1)
+        error_handling("read error");
+
     printf("move from %s to %s (bytes: %d) finished.\n", argv[1], argv[2], totalSize);
     
     close(fin);
