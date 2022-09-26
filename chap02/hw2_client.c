@@ -1,5 +1,6 @@
 /** 
  * 2021114335 박지원
+ * hw2_client.c
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +18,7 @@ typedef struct {
 
 void error_handling(char *message);
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
 	int sock;
 	struct sockaddr_in serv_addr;
 	PACKET packet;
@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
 		
 	if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1) 
 		error_handling("connect() error!");
+
 	while(1){
 		printf("Input dotted-decimal address: ");
 		scanf("%s", packet.addr);
@@ -67,8 +68,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void error_handling(char *message)
-{
+void error_handling(char *message){
 	fputs(message, stderr);
 	fputc('\n', stderr);
 	exit(1);

@@ -1,5 +1,6 @@
 /** 
  * 2021114335 박지원
+ * hw2_server.c
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +18,7 @@ typedef struct {
 
 void error_handling(char *message);
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
 	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_addr, clnt_addr;
 	socklen_t clnt_addr_size;
@@ -53,8 +53,7 @@ int main(int argc, char* argv[])
 	if(clnt_sock==-1)
 		error_handling("accept() error");
 
-	while(1)
-	{	
+	while(1){	
 		if(read(clnt_sock, &packet, sizeof(packet))==-1)
 			error_handling("read() error!");
 
@@ -67,8 +66,7 @@ int main(int argc, char* argv[])
 		printf("[Rx] Received Dotted-Decimal Address: %s\n", packet.addr);
 		
 		packet.cmd=1;
-		if(inet_aton(packet.addr, &packet.iaddr)==0)
-		{
+		if(inet_aton(packet.addr, &packet.iaddr)==0){
 			packet.result=0;
 			write(clnt_sock, &packet, sizeof(packet));
 			printf("[Tx] Address conversion fail:(%s)\n\n", packet.addr);
@@ -86,8 +84,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void error_handling(char *message)
-{
+void error_handling(char *message){
 	fputs(message, stderr);
 	fputc('\n', stderr);
 	exit(1);
