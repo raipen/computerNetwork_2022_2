@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
 
         packet.ack = packet.seq + packet.buf_len + 1;
         write(sock, &packet, sizeof(packet));
-        printf(" [Client] TX ACK: %d\n\n", packet.ack);
+        printf("[Client] TX ACK: %d\n\n", packet.ack);
     }
     close(sock);
     close(fd);
