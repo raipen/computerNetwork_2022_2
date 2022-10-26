@@ -36,13 +36,14 @@ int main(int argc, char* argv[]){
 	serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
 	serv_addr.sin_port=htons(atoi(argv[2]));
 	
+	connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+
 	/* 서버에 패킷 보내기
-	sendto(sock, &packet, sizeof(packet), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+	write(sock, &packet, sizeof(packet));
 	*/
 
 	/* 서버로부터 패킷 받기
-	serv_addr_size=sizeof(serv_addr);
-	recvfrom(sock, &packet, sizeof(packet), 0, (struct sockaddr*)&serv_addr, &serv_addr_size);
+	read(sock, &packet, sizeof(packet));
 	*/
 
 	close(sock);

@@ -16,7 +16,7 @@ typedef struct {
 void error_handling(char *message);
 
 int main(int argc, char* argv[]){
-	int serv_sock;
+	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_addr, clnt_addr;
 	socklen_t clnt_addr_size;
 	PACKET packet;
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 	
-	serv_sock=socket(PF_INET, SOCK_DGRAM, 0);
+	serv_sock=socket(PF_INET, SOCK_STREAM, 0);
 	if(serv_sock == -1)
 		error_handling("socket() error");
 	
@@ -38,15 +38,32 @@ int main(int argc, char* argv[]){
 	if(bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1)
 		error_handling("bind() error");
 	
-	/* 클라이언트로부터 패킷 받기
+	if(listen(serv_sock, 5)==-1)
+		error_handling("listen() error");
+	
+	printf("---------------------------\n");
+	printf(" TCP Server \n");
+	printf("---------------------------\n");
+	
 	clnt_addr_size=sizeof(clnt_addr);
-	recvfrom(serv_sock, &packet, sizeof(packet), 0, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+	clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+	if(clnt_sock==-1)
+		error_handling("accept() error");
+
+	/* 클라이언트로부터 패킷 받기
+	if(read(clnt_sock, &packet, sizeof(packet))==-1)
+			error_handling("read() error!");
 	*/
 
-	/* 클라이언트에 패킷 보내기
-	sendto(serv_sock, &packet, sizeof(packet), 0, (struct sockaddr*)&clnt_addr, clnt_addr_size);
+	/* 클라이언트로 패킷 보내기
+	if(write(clnt_sock, &packet, sizeof(packet))==-1)
+			error_handling("write() error!");
 	*/
 
+	shutdown(clnt_sock, SHUT_WR);
+	read(clnt_sock, &packet, sizeof(packet));
+
+	close(clnt_sock);
 	close(serv_sock);
 	printf("Server socket close and exit\n");
 	return 0;
