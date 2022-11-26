@@ -26,11 +26,11 @@ int main(int argc, char *argv[]){
 
     while (fgets(buf1, BUF_SIZE, fp1) != NULL) {
         fputs(buf1, stdout);
-        fflush(stdout);
-        if(fgets(buf2, BUF_SIZE, fp2) != NULL) {
-            fputs(buf2, stdout);
-            fflush(stdout);
-        }
+        fflush(fp1);
+        if(fgets(buf2, BUF_SIZE, fp2) == NULL)
+            break;
+        fputs(buf2, stdout);
+        fflush(fp2);
     }
 
     fclose(fp1);
