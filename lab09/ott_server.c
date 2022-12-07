@@ -120,6 +120,7 @@ void * handle_clnt(void * arg)
     }
 
     packet.command = FILE_SENDING; //파일 전송 중에는 FILE_SENDING 패킷을 전송
+    long write_len;
     while(1)
     {
         packet.len = read(fd, packet.buf, bufSize[packet.type]);
@@ -127,7 +128,10 @@ void * handle_clnt(void * arg)
         if(packet.len < bufSize[packet.type])
             packet.command = FILE_END; //파일 전송 마지막에 FILE_END 패킷을 전송
         DEBUG_PRINT("%d %s %d\n", packet.len, typeString[packet.type], packet.command);
-        write(clnt_sock, &packet, sizeof(packet));
+        write_len = write(clnt_sock, &packet, sizeof(packet));
+        if(write_len != sizeof(packet)){
+            DEBUG_PRINT("%ld %ld\n",sizeof(packet),write_len);
+        }
         total += packet.len;
         if(packet.command == FILE_END)
             break;
@@ -136,7 +140,7 @@ void * handle_clnt(void * arg)
 
     
     //전체 파일 전송 바이트 수 출력 및 가입자 유형 출력
-    printf("Total Tx Bytes: %d to client %d(%s)\n", total, clnt_sock, typeString[packet.type]);
+    printf("\nTotal Tx Bytes: %d to client %d (%s)\n", total, clnt_sock, typeString[packet.type]);
 
     read(clnt_sock, &packet, sizeof(packet));
     if(packet.command != FILE_END_ACK)
@@ -147,7 +151,7 @@ void * handle_clnt(void * arg)
     //파일 전송이 끝나면 클라이언트 소켓을 닫고
     //clnt_socks 배열에서 해당 클라이언트 소켓을 제거
     pthread_mutex_lock(&mutx);
-    for(i=0; i<clnt_cnt; i++)   // remove disconnected client
+    for(i=0; i<clnt_cnt; i++)
     {
         if(clnt_sock==clnt_socks[i])
         {

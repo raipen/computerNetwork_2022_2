@@ -39,14 +39,14 @@ void* getFile(void* arg);
 
 int main(int argc, char *argv[])
 {
-	int sock;
-	struct sockaddr_in serv_addr;
-	pthread_t thread;
-	void * thread_return;
-	if(argc!=3) {
-		printf("Usage : %s <IP> <port>\n", argv[0]);
-		exit(1);
-	}
+   int sock;
+   struct sockaddr_in serv_addr;
+   pthread_t thread;
+   void * thread_return;
+   if(argc!=3) {
+      printf("Usage : %s <IP> <port>\n", argv[0]);
+      exit(1);
+   }
 
     while(1){
         printf("-----------------------------------------------\n");
@@ -68,15 +68,15 @@ int main(int argc, char *argv[])
         if(menu == 1)
             break;
     }
-	
-	sock=socket(PF_INET, SOCK_STREAM, 0);
-	
-	memset(&serv_addr, 0, sizeof(serv_addr));
-	serv_addr.sin_family=AF_INET;
-	serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
-	serv_addr.sin_port=htons(atoi(argv[2]));
-	  
-	if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1){
+   
+   sock=socket(PF_INET, SOCK_STREAM, 0);
+   
+   memset(&serv_addr, 0, sizeof(serv_addr));
+   serv_addr.sin_family=AF_INET;
+   serv_addr.sin_addr.s_addr=inet_addr(argv[1]);
+   serv_addr.sin_port=htons(atoi(argv[2]));
+     
+   if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1){
         printf("connect() error");
         exit(1);
     }
@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
     pthread_create(&thread, NULL, getFile, (void*)&sock);
     pthread_join(thread, &thread_return);
 
-	close(sock);  
-	return 0;
+   close(sock);  
+   return 0;
 }
 
 void* getFile(void* arg){
@@ -102,7 +102,6 @@ void* getFile(void* arg){
     while(1){
         read(sock, &packet, sizeof(packet));
         printf(".");
-        //write(1, packet.buf, packet.len);
         total += packet.len;
         DEBUG_PRINT("%d %s %d\n", packet.len, typeString[packet.type], packet.command);
         if(packet.command == FILE_END)
